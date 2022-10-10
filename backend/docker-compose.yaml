@@ -1,0 +1,19 @@
+version: "2"
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nestjs
+    container_name: "nestjs"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+#    volumes:
+#      - ./:/home/node/app
+      # - node_modules:/home/node/app/node_modules
+    ports:
+      - "3000:3000"
+    command: "npm start"
+# volumes:
+#   node_modules:

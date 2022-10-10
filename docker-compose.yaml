@@ -1,0 +1,22 @@
+version: "3"
+services:
+  node:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: nestjs
+    container_name: "nestjs"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - type: bind
+        source: ./frontend/build
+        target: /home/node/app/frontend/build
+
+
+    ports:
+      - "3000:3000"
+    # command: "npm start"
+# volumes:
+#   node_modules:
