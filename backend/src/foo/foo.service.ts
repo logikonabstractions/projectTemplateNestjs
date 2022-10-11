@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFooDto } from './dto/create-foo.dto';
 import { UpdateFooDto } from './dto/update-foo.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Foo, FooDocument } from './entities/foo.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class FooService {
-  create(createFooDto: CreateFooDto) {
-    return 'This action adds a new foo';
+  constructor(@InjectModel(Foo.name) private fooModel: Model<FooDocument>) {}
+
+  async create(createFooDto: CreateFooDto): Promise<Foo> {
+    return await new this.fooModel(createFooDto).save();
   }
 
-  findAll() {
-    return `This action returns all foo`;
+  async findAll() {
+    return await this.fooModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} foo`;
+  async findOne(id: string) {
+    return await this.fooModel.find({ _id: id });
   }
 
-  update(id: number, updateFooDto: UpdateFooDto) {
-    return `This action updates a #${id} foo`;
+  async update(id: string, updateFooDto: UpdateFooDto) {
+    return this.fooModel.findByIdAndUpdate(id, { ...updateFooDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} foo`;
+  async remove(id: string) {
+    return await this.fooModel.findByIdAndRemove(id);
   }
 }

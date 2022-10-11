@@ -14,6 +14,6 @@ export const configs = {
         debug: false,
     },
     // mongoURL: 'mongodb://mongodb:27017'
-    mongoURL: 'mongodb://me@asdf:mongodb'
+    mongoURL: 'mongodb://root:example@mongo:27017/'
 
 }

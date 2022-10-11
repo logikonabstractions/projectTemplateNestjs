@@ -18,24 +18,23 @@ services:
       - type: bind
         source: ./frontend/build
         target: /home/node/app/frontend/build
-    ports:  
-      - "3000:3000" 
-    networks:
-      - backend
+    ports:
+      - "3000:3000"
     depends_on:
-      - mongodb
-
-  mongodb:
+      mongo:
+        condition: service_started
+  mongo:
     image: mongo:latest
-    container_name: mongodb_container
+    container_name: mongoContainer
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=me
-      - MONGO_INITDB_ROOT_PASSWORD=asdf
-      - MONGO_INITDB_DATABASE=testdb
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+#      MONGO_INITDB_DATABASE: testdb
     ports:
       - 27017:27017
-    # volumes:
-      # - mongodb_data_container:/data/db
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_configs:/data/configdb
     # networks:
       # - backend
     # healthcheck:
@@ -45,7 +44,21 @@ services:
     #   retries: 3
     # command: mongod
 
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    depends_on:
+      mongo:
+        condition: service_started
+
 volumes:
-  mongodb_data_container:
-networks:
-  backend:
+  mongodb_data:
+  mongodb_configs:
+#networks:
+#  backend:

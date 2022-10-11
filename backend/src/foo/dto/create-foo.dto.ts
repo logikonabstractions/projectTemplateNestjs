@@ -1,1 +1,3 @@
-export class CreateFooDto {}
+export class CreateFooDto {
+  attr: string;
+}
