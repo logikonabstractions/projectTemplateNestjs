@@ -8,9 +8,9 @@ import { FooModule } from './foo/foo.module';
 
 @Module({
   imports: [
-    // ServeStaticModule.forRoot({
-    //   rootPath: configs.path,
-    // }),
+    ServeStaticModule.forRoot({
+      rootPath: configs.path,
+    }),
     MongooseModule.forRoot(configs.mongoURL),
     FooModule,
   ],
