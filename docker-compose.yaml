@@ -7,16 +7,45 @@ services:
     image: nestjs
     container_name: "nestjs"
     restart: unless-stopped
-    environment:
-      - NODE_ENV=production
+    # environment:
+      # - DB_ROOTURL=mongodb://
+      # - DB_USER=root
+      # - DB_PASS=pass12345
+      # - DB_PORT=27017
+      # - DB_SERVICENAME=mongodb
+      # - NODE_ENV=production
     volumes:
       - type: bind
         source: ./frontend/build
         target: /home/node/app/frontend/build
+    ports:  
+      - "3000:3000" 
+    networks:
+      - backend
+    depends_on:
+      - mongodb
 
-
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_container
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=me
+      - MONGO_INITDB_ROOT_PASSWORD=asdf
+      - MONGO_INITDB_DATABASE=testdb
     ports:
-      - "3000:3000"
-    # command: "npm start"
-# volumes:
-#   node_modules:
+      - 27017:27017
+    # volumes:
+      # - mongodb_data_container:/data/db
+    # networks:
+      # - backend
+    # healthcheck:
+    #   test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    # command: mongod
+
+volumes:
+  mongodb_data_container:
+networks:
+  backend:
