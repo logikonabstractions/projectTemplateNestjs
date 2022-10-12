@@ -1,7 +1,7 @@
 import { join } from 'path';
 
 export const configs = {
-    path: join(__dirname,'../', 'frontend/build'),
+    path: join(__dirname,'../../', 'frontend/build'),
     cors : {
         origin: true,
         methods: ['GET', 'PATCH', 'POST', 'DELETE'],

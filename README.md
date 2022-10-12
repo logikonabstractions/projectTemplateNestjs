@@ -1,5 +1,14 @@
 # about
 
+# TODOs
+* use envars to set URLs in react 
+* react Dockerfile
+* override runtime envars with docker-compose-dev?
+
+
+we should override envars from frontend/.env with docker-compose-dev.yml, because that would allow us to only have to touch the compose file to set the backend running on localhost vs within docker etc. 
+ 
+
 ## Usage
 1. build react app (`npm run build` from `/frontend`) if not already built
 2. `docker-compose up` from template root (`/projectTemplateNestjs`)
