@@ -10,7 +10,7 @@ we should override envars from frontend/.env with docker-compose-dev.yml, becaus
  
 
 ## Usage
-1. build react app (`npm run build` from `/frontend`) if not already built
+1. `git clone --recurse-submodules --remote-submodules git@github.com:logikonabstractions/projectTemplateNestjs.git` to clone the repo, as well as the submodule (frontend), on a detached head at the latest commit of the branch specified in `.gitmodules`
 2. `docker-compose up` from template root (`/projectTemplateNestjs`)
 3. goto `localhost:3000` for the react UI & `localhost:8081` for the db admin site.
 
@@ -29,6 +29,14 @@ git commit
 ```
 git clone --recuse-submodules <REPO>
 ```
+This clone the parent repo, as well as the submodule, but on a detached head mode that may NOT be up to date with the remote.
+
+### cloning the parent git, the submodule AND checkout the submodule at latest commit 
+```
+git clone --recuse-submodules --remote-submodules <REPO>
+```
+This clone the parent repo, as well as the submodule, but on a detached head mode that may NOT be up to date with the remote.
+
 
 ### pull upstream changes into submodule (from parent)
 `git submodule update --remote --recursive`
