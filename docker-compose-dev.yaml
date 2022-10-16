@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     environment:
       # whether or not to build the react app under frontend/build. will slow down startup of react dev server (since it will build first)
-      - BUILDREACT=false
+      - BUILDREACT=true
 
     ports:
       - 3001:3001
@@ -20,7 +20,7 @@ services:
       - type: volume
         source: node_modules_frontend
         target: /home/node/app/frontend/node_modules
-    command: bash ./startup.sh
+    command: /bin/sh ./startup.sh
 
   backend:
     build:
