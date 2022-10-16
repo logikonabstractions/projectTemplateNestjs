@@ -23,7 +23,7 @@ services:
         target: /home/node/app/frontend
       - type: volume
         source: node_modules_frontend
-        target: /home/node/app/node_modules_frontend
+        target: /home/node/app/frontend/node_modules
     command: npm run start
 
   backend:
@@ -43,15 +43,15 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - type: bind
-        source: ./frontend/build
-        target: /home/node/app/frontend/build
+      # - type: bind
+        # source: ./frontend/build
+        # target: /home/node/app/frontend/build
       - type: bind
         source: ./backend
         target: /home/node/app/backend
       - type: volume
         source: node_modules_backend
-        target: /home/node/app/node_modules
+        target: /home/node/app/backend/node_modules
     command: npm run start:dev
 
     depends_on:
