@@ -1,13 +1,5 @@
 # about
 
-# TODOs
-* use envars to set URLs in react 
-* react Dockerfile
-* override runtime envars with docker-compose-dev?
-
-
-we should override envars from frontend/.env with docker-compose-dev.yml, because that would allow us to only have to touch the compose file to set the backend running on localhost vs within docker etc. 
- 
 
 ## Usage
 1. `git clone --recurse-submodules --remote-submodules git@github.com:logikonabstractions/projectTemplateNestjs.git` (read the fine [prints for details](#github-and-submodules))
@@ -35,7 +27,7 @@ This clone the parent repo, as well as the submodule, but on a detached head mod
 ```
 git clone --recuse-submodules --remote-submodules <REPO>
 ```
-This clone the parent repo, as well as the submodule, but on a detached head mode that may NOT be up to date with the remote.
+This clone the parent repo, as well as the submodule, but on a detached head mode that IS up to date with the remote.
 
 
 ### pull upstream changes into submodule (from parent)
@@ -76,8 +68,8 @@ If you work on both backend/frontend and thus commit/fetch with the submodule, y
 * `/frontend` the `react` (or whatever else) UI
 
 # Improvements/stuff that would be nice to implt.
-1. a [bind mount](https://docs.docker.com/storage/bind-mounts/) for the nestjs code (so that we can do hot reload with docker)
+1. ~a [bind mount](https://docs.docker.com/storage/bind-mounts/) for the nestjs code (so that we can do hot reload with docker)~
 2. some auto build for react (now have to do manually)
 3. a container serving react in dev/debug mode, with hot reload
-4. 
+4. check how to best manage envars - e.g. some .env file that docker-compose can read? or just environment: in dc?
 
