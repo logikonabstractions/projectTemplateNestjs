@@ -69,7 +69,7 @@ If you work on both backend/frontend and thus commit/fetch with the submodule, y
 
 # Improvements/stuff that would be nice to implt.
 1. ~a [bind mount](https://docs.docker.com/storage/bind-mounts/) for the nestjs code (so that we can do hot reload with docker)~
-2. some auto build for react (now have to do manually)
-3. a container serving react in dev/debug mode, with hot reload
+2. ~some auto build for react (now have to do manually)~
+3. ~a container serving react in dev/debug mode, with hot reload~
 4. check how to best manage envars - e.g. some .env file that docker-compose can read? or just environment: in dc?
 
