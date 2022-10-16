@@ -1,5 +1,5 @@
-# FROM node:18-alpine
-FROM node:18
+FROM node:18-alpine
+# FROM node:18
 RUN mkdir -p /home/node/app/backend && chown -R node:node /home/node/app/backend
 WORKDIR /home/node/app/backend
 COPY package*.json ./
