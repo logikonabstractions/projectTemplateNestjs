@@ -7,13 +7,9 @@ services:
     image: node:slim
     container_name: frontend
     restart: unless-stopped
-      # environment:
-      # - DB_ROOTURL=mongodb://
-      # - DB_USER=root
-      # - DB_PASS=pass12345
-      # - DB_PORT=27017
-      # - DB_SERVICENAME=mongodb
-    # - NODE_ENV=production
+    environment:
+      # whether or not to build the react app under frontend/build. will slow down startup of react dev server (since it will build first)
+      - BUILDREACT=false
 
     ports:
       - 3001:3001
@@ -24,7 +20,7 @@ services:
       - type: volume
         source: node_modules_frontend
         target: /home/node/app/frontend/node_modules
-    command: npm run start
+    command: bash ./startup.sh
 
   backend:
     build:
@@ -52,6 +48,10 @@ services:
       - type: volume
         source: node_modules_backend
         target: /home/node/app/backend/node_modules
+      - type: bind
+        source: ./frontend/build
+        target: /home/node/app/frontend/build
+
     command: npm run start:dev
 
     depends_on:
