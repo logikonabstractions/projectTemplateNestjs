@@ -1,9 +1,9 @@
-import {configs} from "../configs";
-import { Controller, Get, Res } from "@nestjs/common";
+import { configs } from '../configs';
+import { Controller, Get, Res } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Response } from "express";
-import { readFileSync } from "fs";
-import {join} from "path";
+import { Response } from 'express';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 @Controller()
 export class AppController {

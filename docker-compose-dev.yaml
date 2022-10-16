@@ -1,11 +1,33 @@
 version: "3"
 services:
-  node:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: node:slim
+    container_name: frontend
+    restart: unless-stopped
+    environment:
+      # whether or not to build the react app under frontend/build. will slow down startup of react dev server (since it will build first)
+      - BUILDREACT=false
+
+    ports:
+      - 3001:3001
+    volumes:
+      - type: bind
+        source: ./frontend
+        target: /home/node/app/frontend
+      - type: volume
+        source: node_modules_frontend
+        target: /home/node/app/frontend/node_modules
+    command: bash ./startup.sh
+
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     image: nestjs
-    container_name: "nestjs"
+    container_name: backend
     restart: unless-stopped
     # environment:
       # - DB_ROOTURL=mongodb://
@@ -14,12 +36,24 @@ services:
       # - DB_PORT=27017
       # - DB_SERVICENAME=mongodb
       # - NODE_ENV=production
+    ports:
+      - "3000:3000"
     volumes:
+      # - type: bind
+        # source: ./frontend/build
+        # target: /home/node/app/frontend/build
+      - type: bind
+        source: ./backend
+        target: /home/node/app/backend
+      - type: volume
+        source: node_modules_backend
+        target: /home/node/app/backend/node_modules
       - type: bind
         source: ./frontend/build
         target: /home/node/app/frontend/build
-    ports:
-      - "3000:3000"
+
+    command: npm run start:dev
+
     depends_on:
       mongo:
         condition: service_started
@@ -43,7 +77,6 @@ services:
     #   timeout: 10s
     #   retries: 3
     # command: mongod
-
   mongo-express:
     image: mongo-express
     restart: always
@@ -60,5 +93,8 @@ services:
 volumes:
   mongodb_data:
   mongodb_configs:
+  node_modules_backend:
+  node_modules_frontend:
 #networks:
 #  backend:
+#  frontend:
