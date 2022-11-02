@@ -1,0 +1,100 @@
+version: "3"
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: node:slim
+    container_name: frontend
+    restart: unless-stopped
+    environment:
+      # whether or not to build the react app under frontend/build. will slow down startup of react dev server (since it will build first)
+      - BUILDREACT=false
+
+    ports:
+      - 3001:3001
+    volumes:
+      - type: bind
+        source: ./frontend
+        target: /home/node/app/frontend
+      - type: volume
+        source: node_modules_frontend
+        target: /home/node/app/frontend/node_modules
+    command: bash ./startup.sh
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: nestjs
+    container_name: backend
+    restart: unless-stopped
+    # environment:
+      # - DB_ROOTURL=mongodb://
+      # - DB_USER=root
+      # - DB_PASS=pass12345
+      # - DB_PORT=27017
+      # - DB_SERVICENAME=mongodb
+      # - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    volumes:
+      # - type: bind
+        # source: ./frontend/build
+        # target: /home/node/app/frontend/build
+      - type: bind
+        source: ./backend
+        target: /home/node/app/backend
+      - type: volume
+        source: node_modules_backend
+        target: /home/node/app/backend/node_modules
+      - type: bind
+        source: ./frontend/build
+        target: /home/node/app/frontend/build
+
+    command: npm run start:dev
+
+    depends_on:
+      mongo:
+        condition: service_started
+  mongo:
+    image: mongo:latest
+    container_name: mongoContainer
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+#      MONGO_INITDB_DATABASE: testdb
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_configs:/data/configdb
+    # networks:
+      # - backend
+    # healthcheck:
+    #   test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    # command: mongod
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    depends_on:
+      mongo:
+        condition: service_started
+
+volumes:
+  mongodb_data:
+  mongodb_configs:
+  node_modules_backend:
+  node_modules_frontend:
+#networks:
+#  backend:
+#  frontend:
