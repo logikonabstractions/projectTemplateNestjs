@@ -3,7 +3,7 @@
 ## Usage
 1. build react app (`npm run build` from `/frontend`) if not already built
 2. `docker-compose up` from template root (`/projectTemplateNestjs`)
-3. goto `localhost:3000` for the react UI & `localhost:8081` for the db admin site.
+3.  goto `localhost:3000` for the react UI & `localhost:8081` for the db admin site.
 
 ## docker stuff
 * `docker-compose up --build --force-recreate` may be an option if you edit the code in `/backend`. If you make changes in the code, make sure you're running the Docker image/container you think you are.
