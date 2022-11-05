@@ -25,7 +25,7 @@ This clone the parent repo, as well as the submodule, but on a detached head mod
 
 ### cloning the parent git, the submodule AND checkout the submodule at latest commit 
 ```
-git clone --recuse-submodules --remote-submodules <REPO>
+git clone --recurse-submodules --remote-submodules <REPO>
 ```
 This clone the parent repo, as well as the submodule, but on a detached head mode that IS up to date with the remote.
 
