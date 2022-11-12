@@ -32,12 +32,12 @@ services:
     container_name: backend
     restart: unless-stopped
     # TODO: configure backend code so it source those envars for db cx
-    # environment:
-      # - DB_ROOTURL=mongodb://
-      # - DB_USER=root
-      # - DB_PASS=pass12345
-      # - DB_PORT=27017
-      # - DB_SERVICENAME=mongodb
+    environment:
+      - DB_ROOTURL=mongodb://
+      - DB_USER=root
+      - DB_PASS=example
+      - DB_PORT=27017
+      - DB_SERVICENAME=mongo
       # - NODE_ENV=production
     ports:
       - "3000:3000"
