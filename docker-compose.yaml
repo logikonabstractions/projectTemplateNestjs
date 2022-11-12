@@ -1,13 +1,14 @@
 version: "3"
 services:
-  node:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     image: nestjs
     container_name: "nestjs"
     restart: unless-stopped
-    # environment:
+    environment:
+      - BUILDREACT=false
       # - DB_ROOTURL=mongodb://
       # - DB_USER=root
       # - DB_PASS=pass12345
@@ -23,6 +24,7 @@ services:
     depends_on:
       mongo:
         condition: service_started
+    command: ./startup_dev.sh
   mongo:
     image: mongo:latest
     container_name: mongoContainer
@@ -60,5 +62,3 @@ services:
 volumes:
   mongodb_data:
   mongodb_configs:
-#networks:
-#  backend:

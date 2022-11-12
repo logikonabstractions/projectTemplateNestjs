@@ -4,7 +4,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: node:slim
+    image: node
     container_name: frontend
     restart: unless-stopped
     environment:
@@ -14,21 +14,24 @@ services:
     ports:
       - 3001:3001
     volumes:
+      # bind mount so that local changes get reflected into running container directly
       - type: bind
         source: ./frontend
         target: /home/node/app/frontend
+      #  name volume so that stuff installed w npm installed is persisted
       - type: volume
         source: node_modules_frontend
         target: /home/node/app/frontend/node_modules
-    command: bash ./startup.sh
+    command: ./startup.sh
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: nestjs
+    image: mynestjs
     container_name: backend
     restart: unless-stopped
+    # TODO: configure backend code so it source those envars for db cx
     # environment:
       # - DB_ROOTURL=mongodb://
       # - DB_USER=root
@@ -38,10 +41,8 @@ services:
       # - NODE_ENV=production
     ports:
       - "3000:3000"
+    # this is key - see readme for technical details.
     volumes:
-      # - type: bind
-        # source: ./frontend/build
-        # target: /home/node/app/frontend/build
       - type: bind
         source: ./backend
         target: /home/node/app/backend
@@ -51,9 +52,9 @@ services:
       - type: bind
         source: ./frontend/build
         target: /home/node/app/frontend/build
-
-    command: npm run start:dev
-
+    # if no new package, npm install is really quick. if new stuff in package.json, installs it to our persistent node_modules_backend vol.
+    command: bash -c "npm install && npm run start:dev"
+    # ensures we start the backend only after the mongo container is up & running
     depends_on:
       mongo:
         condition: service_started
@@ -61,22 +62,17 @@ services:
     image: mongo:latest
     container_name: mongoContainer
     environment:
+      # those are officiel mongo envars named. see mongo img on dockerhub for details
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-#      MONGO_INITDB_DATABASE: testdb
     ports:
       - 27017:27017
     volumes:
+      # mapping /data/db in container to named volume, so data is persisted between runs
       - mongodb_data:/data/db
       - mongodb_configs:/data/configdb
-    # networks:
-      # - backend
-    # healthcheck:
-    #   test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
-    # command: mongod
+
+  # a simple db explorer running on localhost:8081
   mongo-express:
     image: mongo-express
     restart: always
@@ -90,11 +86,9 @@ services:
       mongo:
         condition: service_started
 
+# named volumes for persistent data
 volumes:
   mongodb_data:
   mongodb_configs:
   node_modules_backend:
   node_modules_frontend:
-#networks:
-#  backend:
-#  frontend:
