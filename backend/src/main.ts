@@ -6,7 +6,7 @@ import { configs } from '../configs';
 async function bootstrap() {
   console.error(configs.mongoURL);
   const app = await NestFactory.create(AppModule);
-  app.enableCors()
+  app.enableCors();
   await app.listen(3000);
   console.error(`listening on: localhost:3000`);
   console.error(`nestjs hot server reload as well`);

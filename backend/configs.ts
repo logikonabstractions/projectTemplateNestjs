@@ -13,7 +13,6 @@ export const configs = {
         uriTest: 'mongodb://database:27017/rexpo-test',
         debug: false,
     },
-    // mongoURL: 'mongodb://mongodb:27017'
     mongoURL: 'mongodb://root:example@mongo:27017/'
-
+    // mongoURL: 'mongodb://root:example@localhost:27017/'
 }
