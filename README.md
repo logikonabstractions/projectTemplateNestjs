@@ -14,6 +14,8 @@ we should override envars from frontend/.env with docker-compose-dev.yml, becaus
 
 ## dev setup - summary
 
+**for now, you must still run `npm install && npm run build` from within /frontend to produce the /frontend/build/index.html which nestjs expects to be serving. This will ultimatley be automated.**
+
 `docker-compose -f docker-compose-dev.yaml up`
 
 * `localhost:3001/`: the react app with hot reload
