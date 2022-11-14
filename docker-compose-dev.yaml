@@ -1,18 +1,18 @@
 version: "3"
+# uses build time envars from .env
 services:
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: node
+    image: mynode
     container_name: frontend
     restart: unless-stopped
-    environment:
-      # whether or not to build the react app under frontend/build. will slow down startup of react dev server (since it will build first)
-      - BUILDREACT=false
-
+    # those are run-time variables, available within containers
+    env_file:
+      - .runtime.env
     ports:
-      - 3001:3001
+      - ${REACT_PORT}:${REACT_PORT}
     volumes:
       # bind mount so that local changes get reflected into running container directly
       - type: bind
@@ -32,15 +32,11 @@ services:
     container_name: backend
     restart: unless-stopped
     # TODO: configure backend code so it source those envars for db cx
-    environment:
-      - DB_ROOTURL=mongodb://
-      - DB_USER=root
-      - DB_PASS=example
-      - DB_PORT=27017
-      - DB_SERVICENAME=mongo
-      # - NODE_ENV=production
+    env_file:
+      - .env
+      - .runtime.env
     ports:
-      - "3000:3000"
+      - ${SERVER_PORT}:${SERVER_PORT}
     # this is key - see readme for technical details.
     volumes:
       - type: bind
@@ -56,17 +52,20 @@ services:
     command: bash -c "npm install && npm run start:dev"
     # ensures we start the backend only after the mongo container is up & running
     depends_on:
-      mongo:
+      db_container:
         condition: service_started
-  mongo:
+  db_container:
     image: mongo:latest
     container_name: mongoContainer
+    env_file:
+      - .env
+      - .runtime.env
     environment:
       # those are officiel mongo envars named. see mongo img on dockerhub for details
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
     ports:
-      - 27017:27017
+      - ${DB_PORT}:${DB_PORT}
     volumes:
       # mapping /data/db in container to named volume, so data is persisted between runs
       - mongodb_data:/data/db
@@ -79,11 +78,11 @@ services:
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${DB_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_PASS}
+      ME_CONFIG_MONGODB_URL: ${DB_ROOTURL}${DB_USER}:${DB_PASS}@${DB_SERVICENAME}:${DB_PORT}/
     depends_on:
-      mongo:
+      db_container:
         condition: service_started
 
 # named volumes for persistent data
