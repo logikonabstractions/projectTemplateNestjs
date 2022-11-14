@@ -5,7 +5,9 @@
 * react Dockerfile
 * override runtime envars with docker-compose-dev?
 * check cross-platform (currently linux tested only)
-
+# ISSUES
+## Windows....
+* bind mount works FINE with the -dev.yaml version, however the hot reload for some reason doesn't. Works as expected on linux.
 
 we should override envars from frontend/.env with docker-compose-dev.yml, because that would allow us to only have to touch the compose file to set the backend running on localhost vs within docker etc. 
  
